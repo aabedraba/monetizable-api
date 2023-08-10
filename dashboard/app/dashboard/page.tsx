@@ -1,11 +1,10 @@
-import { KeyManager } from "./key-manager";
 import { authOptions } from "../api/auth/[...nextauth]/auth-options";
 import { CurrentSubscriptionUsage } from "@/components/current-subscription";
+import { KeyManager } from "@/components/key-manager/key-manager";
 import { getSubscription, getUsage } from "@/lib/get-subscription";
 import { isLoggedInSession } from "@/lib/logged-in";
 import { getRequiredEnvVar } from "@/lib/utils";
 import { getServerSession } from "next-auth";
-import { useTheme } from "next-themes";
 import { redirect } from "next/navigation";
 
 export default async function DashboardPage() {
@@ -39,10 +38,7 @@ export default async function DashboardPage() {
             To use the API, use the API Key manager below:
           </h1>
           <div className="my-10">
-            <KeyManager
-              apiUrl={zuploUrl}
-              accessToken={session.accessToken}
-            />
+            <KeyManager apiUrl={zuploUrl} accessToken={session.accessToken} />
           </div>
           <p className="max-w-[700px] text-lg  sm:text-xl">
             Make an authenticated API request:
