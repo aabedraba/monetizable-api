@@ -1,10 +1,12 @@
 "use client";
 
-import FullScreenLoading from "@/components/full-screen-loading";
+import { Icons } from "../../components/ui/icons";
+import { useCreateAPIKeyModal } from "./create-key-modal";
 import ApiKeyManager, {
   Consumer,
   DefaultApiKeyManagerProvider,
 } from "@zuplo/react-api-key-manager";
+import { useTheme } from "next-themes";
 import { useCallback, useMemo, useState } from "react";
 
 interface Props {
@@ -15,6 +17,10 @@ interface Props {
 export function KeyManager({ apiUrl, accessToken }: Props) {
   const [isCreating, setIsCreating] = useState(false);
   const [showIsLoading, setShowIsLoading] = useState(false);
+  const { theme } = useTheme();
+
+  const { CreateAPIKeyModal, setShowCreateAPIKeyModal } =
+    useCreateAPIKeyModal();
 
   const provider = useMemo(() => {
     return new DefaultApiKeyManagerProvider(apiUrl, accessToken);
@@ -48,6 +54,7 @@ export function KeyManager({ apiUrl, accessToken }: Props) {
         alert(`Error creating key: ${e}`);
       } finally {
         setIsCreating(false);
+        setShowCreateAPIKeyModal(false);
       }
     },
     [provider]
@@ -69,13 +76,6 @@ export function KeyManager({ apiUrl, accessToken }: Props) {
     [provider]
   );
 
-  function clickCreateConsumer() {
-    const desc = window.prompt("Enter a description for your new API Key");
-    if (desc) {
-      createConsumer(desc);
-    }
-  }
-
   const menuItems = useMemo(() => {
     return [
       {
@@ -87,22 +87,30 @@ export function KeyManager({ apiUrl, accessToken }: Props) {
     ];
   }, [deleteConsumer]);
 
-  if (isCreating) {
-    return <FullScreenLoading />;
-  }
-
   return (
     <div>
       <ApiKeyManager
         provider={provider}
         menuItems={menuItems}
         showIsLoading={showIsLoading}
+        theme={theme === "dark" ? "dark" : "light"}
       />
       <button
-        onClick={clickCreateConsumer}
+        disabled={isCreating}
+        onClick={() => setShowCreateAPIKeyModal(true)}
         className="bg-pink-500 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded-lg flex flex-row items-center"
       >
-        Create new API Key
+        {isCreating ? (
+          <>
+            <Icons.loadingSpinner />
+            Creating...
+          </>
+        ) : (
+          <>
+            <CreateAPIKeyModal createConsumer={createConsumer} />
+            <>Create new API Key</>
+          </>
+        )}
       </button>
     </div>
   );

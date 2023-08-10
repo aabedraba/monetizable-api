@@ -1,11 +1,12 @@
-import { getSubscription, getUsage } from "@/lib/get-subscription";
+import { KeyManager } from "./key-manager";
 import { authOptions } from "../api/auth/[...nextauth]/auth-options";
-import { KeyManager } from "../../components/key-manager";
 import { CurrentSubscriptionUsage } from "@/components/current-subscription";
+import { getSubscription, getUsage } from "@/lib/get-subscription";
 import { isLoggedInSession } from "@/lib/logged-in";
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
 import { getRequiredEnvVar } from "@/lib/utils";
+import { getServerSession } from "next-auth";
+import { useTheme } from "next-themes";
+import { redirect } from "next/navigation";
 
 export default async function DashboardPage() {
   const zuploUrl = getRequiredEnvVar("ZUPLO_URL") + "/v1";
@@ -20,14 +21,14 @@ export default async function DashboardPage() {
 
   if (subscription.error) {
     // TODO: better handling
-    throw new Error(subscription.error)
+    throw new Error(subscription.error);
   }
 
-  const usage = await getUsage(session)
+  const usage = await getUsage(session);
 
   if (usage.error) {
     // TODO: better handling
-    throw new Error(usage.error)
+    throw new Error(usage.error);
   }
 
   return (
@@ -41,7 +42,6 @@ export default async function DashboardPage() {
             <KeyManager
               apiUrl={zuploUrl}
               accessToken={session.accessToken}
-              email={session.user.email}
             />
           </div>
           <p className="max-w-[700px] text-lg  sm:text-xl">
