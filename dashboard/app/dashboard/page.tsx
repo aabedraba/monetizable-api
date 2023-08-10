@@ -1,13 +1,14 @@
 import { getSubscription, getUsage } from "@/lib/get-subscription";
 import { authOptions } from "../api/auth/[...nextauth]/auth-options";
-import { KeyManager } from "./KeyManager";
+import { KeyManager } from "../../components/key-manager";
 import { CurrentSubscriptionUsage } from "@/components/current-subscription";
 import { isLoggedInSession } from "@/lib/logged-in";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
+import { getRequiredEnvVar } from "@/lib/utils";
 
 export default async function DashboardPage() {
-  const zuploUrl = process.env.ZUPLO_URL || "";
+  const zuploUrl = getRequiredEnvVar("ZUPLO_URL") + "/v1";
   const session = await getServerSession(authOptions);
   const isLoggedIn = isLoggedInSession(session);
 
@@ -18,12 +19,14 @@ export default async function DashboardPage() {
   const subscription = await getSubscription(session);
 
   if (subscription.error) {
+    // TODO: better handling
     throw new Error(subscription.error)
   }
 
   const usage = await getUsage(session)
 
   if (usage.error) {
+    // TODO: better handling
     throw new Error(usage.error)
   }
 
@@ -45,7 +48,7 @@ export default async function DashboardPage() {
             Make an authenticated API request:
           </p>
           <code>
-            curl &apos;{process.env.ZUPLO_URL}/v1/todos&apos; \ <br />
+            curl &apos;{zuploUrl}/todos&apos; \ <br />
             --header &apos;Authorization: Bearer YOUR_KEY_HERE&apos;
           </code>
         </div>

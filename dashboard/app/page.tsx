@@ -1,6 +1,7 @@
 import { authOptions } from "./api/auth/[...nextauth]/auth-options";
 import { SignInPage } from "@/components/sign-in-page";
 import { StripePricingTable } from "@/components/stripe-pricing-table";
+import { getSubscription } from "@/lib/get-subscription";
 import { isLoggedInSession } from "@/lib/logged-in";
 import { getRequiredEnvVar } from "@/lib/utils";
 import { getServerSession } from "next-auth";
@@ -10,16 +11,9 @@ import Script from "next/script";
 export default async function IndexPage() {
   const session = await getServerSession(authOptions);
   if (isLoggedInSession(session)) {
-    const subscriptionRequest = await fetch(
-      `${getRequiredEnvVar("ZUPLO_URL")}/v1/stripe-subscription`,
-      {
-        headers: {
-          Authorization: `Bearer ${session.accessToken}`,
-        },
-      }
-    );
+    const subscription = await getSubscription(session)
 
-    if (subscriptionRequest.ok) {
+    if (!subscription.error) {
       redirect("/dashboard");
     }
   }

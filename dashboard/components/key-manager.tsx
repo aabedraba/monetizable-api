@@ -10,10 +10,9 @@ import { useCallback, useMemo, useState } from "react";
 interface Props {
   apiUrl: string;
   accessToken: string;
-  email: string;
 }
 
-export function KeyManager({ apiUrl, accessToken, email }: Props) {
+export function KeyManager({ apiUrl, accessToken }: Props) {
   const [isCreating, setIsCreating] = useState(false);
   const [showIsLoading, setShowIsLoading] = useState(false);
 
