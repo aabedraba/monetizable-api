@@ -84,7 +84,7 @@ const processCustomerDetails = async (
     }
 
     return {
-      stringUsageSubscriptionItemId: subscription.items.data[0].id,
+      usageSubscriptionItemId: subscription.items.data[0].id,
     };
   } catch (err) {
     context.log.error(err);
