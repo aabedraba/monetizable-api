@@ -1,5 +1,3 @@
-"use client";
-
 import { Icons } from "../../components/ui/icons";
 import { useCreateAPIKeyModal } from "./create-key-modal";
 import ApiKeyManager, {

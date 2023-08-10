@@ -5,8 +5,11 @@ import { siteConfig } from "@/config/site";
 import { Session } from "next-auth";
 import Link from "next/link";
 import UserDropdown from "./user-dropdown";
+import { useAuth0 } from "@auth0/auth0-react";
 
-export function SiteHeader({ session }: { session: Session | null }) {
+export function SiteHeader() {
+  const { isAuthenticated } = useAuth0();
+
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background">
       <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
@@ -16,7 +19,7 @@ export function SiteHeader({ session }: { session: Session | null }) {
               {siteConfig.name}
             </span>
           </Link>
-          <div>{session ? <UserDropdown session={session} /> : <></>}</div>
+          <div>{isAuthenticated ? <UserDropdown /> : <></>}</div>
         </div>
         <div className="flex flex-1 items-center justify-end space-x-4">
           <nav className="flex items-center space-x-1">

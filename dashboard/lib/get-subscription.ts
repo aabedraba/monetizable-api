@@ -1,12 +1,15 @@
-import { LoggedInSession } from "./logged-in";
 import { getRequiredEnvVar } from "./utils";
 
-export const getSubscription = async (session: LoggedInSession) => {
+export const getSubscription = async ({
+  accessToken,
+}: {
+  accessToken: string;
+}) => {
   const subscriptionRequest = await fetch(
-    `${getRequiredEnvVar("ZUPLO_URL")}/v1/subscription`,
+    `${getRequiredEnvVar("NEXT_PUBLIC_API_URL")}/v1/subscription`,
     {
       headers: {
-        Authorization: `Bearer ${session.accessToken}`,
+        Authorization: `Bearer ${accessToken}`,
       },
     }
   );
@@ -16,12 +19,12 @@ export const getSubscription = async (session: LoggedInSession) => {
   return subscriptionJson;
 };
 
-export const getUsage = async (session: LoggedInSession) => {
+export const getUsage = async ({ accessToken }: { accessToken: string }) => {
   const usageRequest = await fetch(
-    `${getRequiredEnvVar("ZUPLO_URL")}/v1/subscription/usage`,
+    `${getRequiredEnvVar("NEXT_PUBLIC_API_URL")}/v1/subscription/usage`,
     {
       headers: {
-        Authorization: `Bearer ${session.accessToken}`,
+        Authorization: `Bearer ${accessToken}`,
       },
     }
   );
