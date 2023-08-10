@@ -56,7 +56,7 @@ export default async function handleRequest(
   void cache.put(stripeCustomerId, subscriptionDetails, 60);
 
   processSuccessfulRequest({
-    subscriptionId: subscriptionDetails.stringUsageSubscriptionItemId,
+    subscriptionId: subscriptionDetails.usageSubscriptionItemId,
     context,
   });
 

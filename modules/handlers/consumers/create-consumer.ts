@@ -23,8 +23,6 @@ export async function createConsumer(
     context,
   });
 
-  context.log.info("stripeSubscription", stripeSubscription)
-
   if (stripeSubscription instanceof ErrorResponse) {
     return stripeSubscription;
   }
